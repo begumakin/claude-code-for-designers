@@ -23,6 +23,23 @@ function weatherCondition(code: number): string {
   return "cloudy";
 }
 
+function weatherIcon(code: number, isDay: boolean): string {
+  if (code === 0) return isDay ? "sun" : "partly-cloudy";
+  if (code === 1 || code === 2) return "partly-cloudy";
+  if (code === 3) return "cloudy";
+  if (code >= 45 && code <= 48) return "cloudy";
+  if (code >= 51 && code <= 64) return "light-rain";
+  if (code === 65 || code === 66 || code === 67) return "heavy-rain";
+  if (code >= 71 && code <= 73) return "snow";
+  if (code === 75 || code === 77) return "heavy-snow";
+  if (code === 80 || code === 81) return "light-rain";
+  if (code === 82) return "heavy-rain";
+  if (code === 85) return "snow";
+  if (code === 86) return "heavy-snow";
+  if (code >= 95) return "thunderstorms";
+  return "cloudy";
+}
+
 function backgroundFor(condition: string, isDay: boolean): string {
   const day = isDay ? "day" : "night";
   const map: Record<string, string> = {
@@ -78,6 +95,7 @@ export default function Widget() {
 
   const condition = weatherCondition(weather.weatherCode);
   const background = backgroundFor(condition, weather.isDay);
+  const icon = weatherIcon(weather.weatherCode, weather.isDay);
   const timeStr = weather.localTime.toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
