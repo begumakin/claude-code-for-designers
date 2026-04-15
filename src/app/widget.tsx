@@ -9,7 +9,7 @@ type Weather = {
   localTime: Date;
 };
 
-const BRUSSELS = { lat: 50.8503, lon: 4.3517, city: "Brussels", country: "Belgium" };
+const BRUSSELS = { lat: 50.8503, lon: 4.3517, city: "Brussels", countryCode: "BE" };
 
 function weatherCondition(code: number): string {
   if (code === 0) return "clear";
@@ -64,7 +64,7 @@ export default function Widget() {
 
   if (error) {
     return (
-      <div className="aspect-[3/4] w-80 rounded-3xl bg-zinc-800 flex items-center justify-center text-zinc-400 text-sm p-6 text-center">
+      <div className="size-[400px] rounded-2xl bg-zinc-800 flex items-center justify-center text-zinc-400 text-sm p-6 text-center">
         Couldn&apos;t load weather. Try again later.
       </div>
     );
@@ -72,7 +72,7 @@ export default function Widget() {
 
   if (!weather) {
     return (
-      <div className="aspect-[3/4] w-80 rounded-3xl bg-zinc-800 animate-pulse" />
+      <div className="size-[400px] rounded-2xl bg-zinc-800 animate-pulse" />
     );
   }
 
@@ -83,26 +83,34 @@ export default function Widget() {
     minute: "2-digit",
     hour12: true,
   });
+  const day = weather.localTime.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const weekday = weather.localTime.toLocaleDateString("en-GB", { weekday: "long" });
+  const dateLine = `${day}, ${weekday}, ${timeStr}`;
 
   return (
     <div
-      className="relative aspect-[3/4] w-80 rounded-3xl overflow-hidden shadow-2xl text-white"
+      className="relative size-[400px] rounded-2xl overflow-hidden shadow-2xl text-white"
       style={{ background }}
     >
-      <div className="absolute inset-0 p-5 flex flex-col justify-between">
-        <div className="flex items-start justify-between">
-          <div className="drop-shadow-md">
-            <div className="text-sm font-medium">Today</div>
-            <div className="text-xs opacity-80">{timeStr}</div>
-          </div>
-          <div className="text-5xl font-light leading-none drop-shadow-md">
-            {weather.temperature}°
-          </div>
-        </div>
-        <div className="drop-shadow-md">
-          <div className="text-lg font-medium leading-tight">{BRUSSELS.city}</div>
-          <div className="text-xs opacity-80">{BRUSSELS.country}</div>
-        </div>
+      <div
+        className="absolute flex items-center text-[120px] font-bold text-white drop-shadow-md whitespace-nowrap"
+        style={{ top: 32, left: 32, lineHeight: "120px", letterSpacing: "-2px" }}
+      >
+        <span>{weather.temperature}</span>
+        <span>°</span>
+      </div>
+      <div
+        className="absolute left-0 right-0 flex items-baseline justify-center gap-2 text-[32px] leading-none text-white drop-shadow-md"
+        style={{ top: 317 }}
+      >
+        <span className="font-semibold">{BRUSSELS.city},</span>
+        <span className="font-light">Belgium</span>
+      </div>
+      <div
+        className="absolute left-0 right-0 text-center text-base font-semibold text-white drop-shadow-md"
+        style={{ top: 357 }}
+      >
+        {dateLine}
       </div>
     </div>
   );
